@@ -1,0 +1,65 @@
+package org.jenkinsci.plugins.cors;
+
+import java.util.Map;
+import java.util.HashMap;
+
+import hudson.Plugin;
+import hudson.model.Hudson;
+import hudson.util.PluginServletFilter;
+
+import javax.servlet.ServletContext;
+
+/**
+ * Entry point of the plugin.
+ * 
+ * <p>
+ * There must be one {@link Plugin} class in each plugin. See javadoc of
+ * {@link Plugin} for more about what can be done on this class.
+ * 
+ * @author Alexis Gallagher
+ */
+public class PluginImpl extends Plugin {
+	private ServletContext context;
+	private CrossOriginFilter filter;
+
+	/** {@inheritDoc} */
+	@Override
+	public void setServletContext(ServletContext context) {
+		super.setServletContext(context);
+		this.context = context;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void start() throws Exception {
+		super.start();
+
+                // get values from plugin configuration panel
+
+                // wrap them in a FilterConfig object
+                Map<String,String> paramMap = new HashMap<String,String>() {{
+                  put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM     , "");
+                  put(CrossOriginFilter.ALLOWED_METHODS_PARAM     , "");
+                  put(CrossOriginFilter.ALLOWED_HEADERS_PARAM     , "");
+                  put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM   , "");
+                  put(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM   , "");
+                  put(CrossOriginFilter.EXPOSED_HEADERS_PARAM     , "");
+                  put(CrossOriginFilter.OLD_CHAIN_PREFLIGHT_PARAM , "");
+                  put(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM     , "");
+                    }};
+                FilterConfigWrapper configWrapper = new FilterConfigWrapper("filterName",this.context,paramMap);
+
+                // pass the config object to initialize the plugin
+                CrossOriginFilter myFilter = new CrossOriginFilter();
+		PluginServletFilter.addFilter(myFilter);
+                myFilter.init(configWrapper);
+		this.filter = myFilter;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void stop() throws Exception {
+            filter.destroy();
+            super.stop();
+	}
+}
