@@ -1,4 +1,5 @@
 package org.jenkinsci.plugins.cors;
+
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.util.FormValidation;
@@ -34,12 +35,17 @@ import java.io.IOException;
  */
 public class HelloWorldBuilder extends Builder {
 
+    private final FilterConfigWrapper wrapper;
+    private final CrossOriginFilter x;
+
     private final String name;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
     public HelloWorldBuilder(String name) {
         this.name = name;
+        this.x= null;
+        this.wrapper = null;
     }
 
     /**

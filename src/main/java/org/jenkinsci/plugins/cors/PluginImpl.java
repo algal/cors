@@ -2,12 +2,14 @@ package org.jenkinsci.plugins.cors;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.logging.Logger;
+
+import javax.servlet.ServletContext;
 
 import hudson.Plugin;
 import hudson.model.Hudson;
 import hudson.util.PluginServletFilter;
 
-import javax.servlet.ServletContext;
 
 /**
  * Entry point of the plugin.
@@ -19,47 +21,50 @@ import javax.servlet.ServletContext;
  * @author Alexis Gallagher
  */
 public class PluginImpl extends Plugin {
-	private ServletContext context;
-	private CrossOriginFilter filter;
+    private final static Logger LOG = Logger.getLogger(PluginImpl.class.getName());
 
-	/** {@inheritDoc} */
-	@Override
-	public void setServletContext(ServletContext context) {
-		super.setServletContext(context);
-		this.context = context;
-	}
+    private ServletContext context;
+    private CrossOriginFilter filter;
 
-	/** {@inheritDoc} */
-	@Override
-	public void start() throws Exception {
-		super.start();
+    /** {@inheritDoc} */
+    @Override
+    public void setServletContext(ServletContext context) {
+        super.setServletContext(context);
+        this.context = context;
+    }
 
-                // get values from plugin configuration panel
+    /** {@inheritDoc} */
+    @Override
+    public void start() throws Exception {
+        super.start();
+        LOG.info("starting CORS plugin");
 
-                // wrap them in a FilterConfig object
-                Map<String,String> paramMap = new HashMap<String,String>() {{
-                  put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM     , "");
-                  put(CrossOriginFilter.ALLOWED_METHODS_PARAM     , "");
-                  put(CrossOriginFilter.ALLOWED_HEADERS_PARAM     , "");
-                  put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM   , "");
-                  put(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM   , "");
-                  put(CrossOriginFilter.EXPOSED_HEADERS_PARAM     , "");
-                  put(CrossOriginFilter.OLD_CHAIN_PREFLIGHT_PARAM , "");
-                  put(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM     , "");
-                    }};
-                FilterConfigWrapper configWrapper = new FilterConfigWrapper("filterName",this.context,paramMap);
+        // get values from plugin configuration panel
 
-                // pass the config object to initialize the plugin
-                CrossOriginFilter myFilter = new CrossOriginFilter();
-		PluginServletFilter.addFilter(myFilter);
-                myFilter.init(configWrapper);
-		this.filter = myFilter;
-	}
+        // wrap them in a FilterConfig object
+        Map<String,String> paramMap = new HashMap<String,String>() {{
+                put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM     , "");
+                put(CrossOriginFilter.ALLOWED_METHODS_PARAM     , "");
+                put(CrossOriginFilter.ALLOWED_HEADERS_PARAM     , "");
+                put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM   , "");
+                put(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM   , "");
+                put(CrossOriginFilter.EXPOSED_HEADERS_PARAM     , "");
+                put(CrossOriginFilter.OLD_CHAIN_PREFLIGHT_PARAM , "");
+                put(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM     , "");
+            }};
+        FilterConfigWrapper configWrapper = new FilterConfigWrapper("filterName",this.context,paramMap);
 
-	/** {@inheritDoc} */
-	@Override
-	public void stop() throws Exception {
-            filter.destroy();
-            super.stop();
-	}
+        // pass the config object to initialize the plugin
+        CrossOriginFilter myFilter = new CrossOriginFilter();
+        PluginServletFilter.addFilter(myFilter);
+        myFilter.init(configWrapper);
+        this.filter = myFilter;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void stop() throws Exception {
+        filter.destroy();
+        super.stop();
+    }
 }
