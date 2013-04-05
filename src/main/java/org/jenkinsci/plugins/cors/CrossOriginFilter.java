@@ -277,10 +277,14 @@ public class CrossOriginFilter implements Filter
      * to present a single origin, not a list.
      *
      * This method does a direct, case-sensitive string comparsion of
-     * the Origin: header field value and the permitted origin. It
-     * does not parse the URI into the components that technically
-     * define the origin (scheme, hostname, port), it does not
-     * canonicalize to lower case, and it does not 
+     * the Origin: header field value and the permitted
+     * origin. According to the spec, origin values in the header
+     * field should already be lower-cased and ascii-serialized. We
+     * might also want to perform this canonicalization on the allowed
+     * origins provided by the user, or this string compare might fail
+     * when the user provides an improper origin (e.g., a Unicode
+     * string, a string with capitals, a URI with path components,
+     * etc..)
      */
     private boolean originMatches(String originList)
     {
