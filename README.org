@@ -1,0 +1,64 @@
+CORS
+
+This is a Jenkins plugin that enables CORS.
+
+CORS allows a server to tell browsers that they are allowed to
+initiate cross-origin resource requests to that server. Normally, if
+your browser is visiting foo.com, JavaScript on foo.com can't directly
+send HTTP requests to bar.com. With CORS, the website at bar.com can
+signal that such requests are okay. This is all explained at
+http://enable-cors.org or via the spec itself at
+http://www.w3.org/TR/cors/.
+
+Why does this matter of Jenkins? Jenkins presents a REST API for
+programatically browsing jobs, triggering builds, etc.. Suppose you
+want to use this API to present a streamlined interface to Jenkins,
+for instance, a webpage that is only used for triggering a particular
+build. To do this, that webpage must talk to Jenkins's REST API. To do
+that, that JS your streamlined interface webpage, YourNiceUI.com,
+needs to be able to talk to your instance of Jenkins at
+YourJenkinsUI.com. And to do that, you need CORS so your Jenkins can
+tell browsers that it is happy to receive traffic that started from
+YourNiceUI.com.
+
+Instead of CORS, there's also JSON-P. But it has various limitations.
+
+This plugin relies on a plain vanilla servlet filter that implements
+CORS. This servlet filter was only very slightly modified from the
+servlet filter that ships with the Jetty web server.
+
+
+* useful links
+
+  CORS intro:
+  http://enable-cors.org
+
+  CORS spec:
+  http://www.w3.org/TR/cors/
+
+* two CORS implementations as Java ServletFilters
+
+  cors servlet filter in jetty at 
+  http://git.eclipse.org/c/jetty/org.eclipse.jetty.project.git/tree/jetty-servlets/src/main/java/org/eclipse/jetty/servlets/CrossOriginFilter.java
+   
+  another cors implementation at:
+  https://bitbucket.org/thetransactioncompany/cors-filter/src/5bfb60adfde5f530ed1c7d497bc6283267602410/src/main/java/com/thetransactioncompany/cors/CORSFilter.java?at=master
+
+
+  Notes:
+
+  - neither implementation calculates default ports based on scheme
+    when port is unspecified
+
+    this would result in failed matches when one specifies the port
+    explicitly, and the other relies on it being the default.
+
+  The TransasctionCompany version is much bigger but seems more
+  full-featured in a few respects:
+
+  - tags requests to expose their CORS status to downstream processors
+  - permits requests with only one origin
+    this fits the most recent version of the spec
+  - lots of precondition checks
+  - fine-grained exceptions
+
