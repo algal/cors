@@ -439,6 +439,7 @@ public class CrossOriginFilter implements Filter
         allowedOrigins.clear();
         allowedMethods.clear();
         allowedHeaders.clear();
+        exposedHeaders.clear();
         preflightMaxAge = 0;
         allowCredentials = false;
     }
