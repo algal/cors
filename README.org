@@ -1,5 +1,6 @@
 CORS
 
+* what 
 This is a Jenkins plugin that enables CORS.
 
 CORS allows a server to tell browsers that they are allowed to
@@ -9,6 +10,8 @@ send HTTP requests to bar.com. With CORS, the website at bar.com can
 signal that such requests are okay. This is all explained at
 http://enable-cors.org or via the spec itself at
 http://www.w3.org/TR/cors/.
+
+* why
 
 Why does this matter of Jenkins? Jenkins presents a REST API for
 programatically browsing jobs, triggering builds, etc.. Suppose you
@@ -21,12 +24,28 @@ YourJenkinsUI.com. And to do that, you need CORS so your Jenkins can
 tell browsers that it is happy to receive traffic that started from
 YourNiceUI.com.
 
-Instead of CORS, there's also JSON-P. But it has various limitations.
+Instead of CORS, there's also JSON-P. But it has various
+limitations. It complicates your client-side JS, provides worse
+error-handling, and can be used for certain kinds of requests (e.g.,
+authenticated POST requests, which are needed for parameterized
+builds).
+
+* how
 
 This plugin relies on a plain vanilla servlet filter that implements
-CORS. This servlet filter was only very slightly modified from the
-servlet filter that ships with the Jetty web server.
+CORS. This servlet filter was adapted from the servlet filter that
+ships with the Jetty web server. It seems to be a correct
+implementation of the spec.
 
+* things that are broken
+
+I believe the class CrossOriginFilter provides a correct CORS
+implementation. The FilterConfigWrapper class provides a tidy way to
+push the configuration values into the servlet filter. I believe the
+.jelly files provide the UI for all the fields a user might need in
+order to configure CORS as they desire. The thing I don't understand
+is (hilariously) how to pass the parameters from the jelly files into
+the Plugin itself. This is a Jenkins question.
 
 * useful links
 
