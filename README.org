@@ -5,47 +5,51 @@ This is a Jenkins plugin that enables CORS.
 
 CORS allows a server to tell browsers that they are allowed to
 initiate cross-origin resource requests to that server. Normally, if
-your browser is visiting foo.com, JavaScript on foo.com can't directly
-send HTTP requests to bar.com. With CORS, the website at bar.com can
+your browser is visiting foo.com, JavaScript from foo.com can't directly
+launch HTTP requests to bar.com. With CORS, the website at bar.com can
 signal that such requests are okay. This is all explained at
 http://enable-cors.org or via the spec itself at
 http://www.w3.org/TR/cors/.
 
 * why
 
-Why does this matter of Jenkins? Jenkins presents a REST API for
+Why does this matter for Jenkins? Jenkins presents a REST API for
 programatically browsing jobs, triggering builds, etc.. Suppose you
 want to use this API to present a streamlined interface to Jenkins,
-for instance, a webpage that is only used for triggering a particular
-build. To do this, that webpage must talk to Jenkins's REST API. To do
-that, that JS your streamlined interface webpage, YourNiceUI.com,
-needs to be able to talk to your instance of Jenkins at
-YourJenkinsUI.com. And to do that, you need CORS so your Jenkins can
-tell browsers that it is happy to receive traffic that started from
-YourNiceUI.com.
+for instance, a webpage YourNiceJenkinsUI.com that is only used for
+triggering a particular build. To do this, your webpage must talk to
+Jenkins's REST API. To do this (if your streamlined webpage is just
+HTML/JS) then the JS on your webpage needs to be able to talk to your
+instance of Jenkins at YourJenkinsUI.com. And to do this, you need to
+setup CORS on your Jenkins so that it can tell browsers that it is
+happy to receive traffic that started from YourNiceUI.com. That's
+where this plugin comes in.
 
-Instead of CORS, there's also JSON-P. But it has various
-limitations. It complicates your client-side JS, provides worse
-error-handling, and can be used for certain kinds of requests (e.g.,
-authenticated POST requests, which are needed for parameterized
-builds).
+Are there other ways? Yes. Instead of enabling CORS on Jekins, there's
+also JSON-P. But it has various limitations. It complicates your
+client-side JS, provides worse error-handling, and can be used for
+certain kinds of requests (e.g., authenticated POST requests, which
+are needed for parameterized builds), etc..
 
 * how
 
-This plugin relies on a plain vanilla servlet filter that implements
+This plugin relies on a plain old Java servlet filter that implements
 CORS. This servlet filter was adapted from the servlet filter that
 ships with the Jetty web server. It seems to be a correct
 implementation of the spec.
 
-* things that are broken
+* things that are working, one thing that is broken
 
-I believe the class CrossOriginFilter provides a correct CORS
-implementation. The FilterConfigWrapper class provides a tidy way to
-push the configuration values into the servlet filter. I believe the
-.jelly files provide the UI for all the fields a user might need in
-order to configure CORS as they desire. The thing I don't understand
-is (hilariously) how to pass the parameters from the jelly files into
-the Plugin itself. This is a Jenkins question.
+The class CrossOriginFilter provides a correct CORS
+implementation. The FilterConfigWrapper class provides a way to push
+configuration values into that servlet filter. The .jelly files
+provide the UI for all the fields a user might need in order to
+configure CORS as they desire.
+
+However, the thing I don't understand is (hilariously) how to pass the
+parameters from the jelly files into the Plugin itself. This requires
+more knowledge about Jenkins's plugin system than is easy to extract
+from Jenkins documentation system.
 
 * useful links
 
