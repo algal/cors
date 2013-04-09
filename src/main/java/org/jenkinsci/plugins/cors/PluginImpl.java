@@ -65,6 +65,7 @@ public class PluginImpl extends Plugin {
     public void stop() throws Exception {
         filter.destroy();
         super.stop();
+        LOG.info("stop CORS plugin");
     }
 
     @Override
@@ -75,5 +76,6 @@ public class PluginImpl extends Plugin {
                hudson.model.Descriptor.FormException
     {
         LOG.config("configure called with formData.getString(\"name\") = " + formData.getString("name"));
+        return ;
     }
 }
