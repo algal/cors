@@ -46,10 +46,9 @@ public class PluginImpl extends Plugin {
                 put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM     , "");
                 put(CrossOriginFilter.ALLOWED_METHODS_PARAM     , "");
                 put(CrossOriginFilter.ALLOWED_HEADERS_PARAM     , "");
-                put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM   , "");
+                put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM   , "5");
                 put(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM   , "");
                 put(CrossOriginFilter.EXPOSED_HEADERS_PARAM     , "");
-                put(CrossOriginFilter.OLD_CHAIN_PREFLIGHT_PARAM , "");
                 put(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM     , "");
             }};
         FilterConfigWrapper configWrapper = new FilterConfigWrapper("filterName",this.context,paramMap);
@@ -66,5 +65,15 @@ public class PluginImpl extends Plugin {
     public void stop() throws Exception {
         filter.destroy();
         super.stop();
+    }
+
+    @Override
+    public void configure(org.kohsuke.stapler.StaplerRequest req,
+                          net.sf.json.JSONObject formData)
+        throws java.io.IOException,
+               javax.servlet.ServletException,
+               hudson.model.Descriptor.FormException
+    {
+        LOG.config("configure called with formData.getString(\"name\") = " + formData.getString("name"));
     }
 }
