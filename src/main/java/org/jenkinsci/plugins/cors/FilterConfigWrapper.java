@@ -36,4 +36,12 @@ public class FilterConfigWrapper implements FilterConfig
         return map.get(name);
     }
 
+    public String toString() {
+        final String retval =
+            "filtername="+filterName+",\n"+
+            "context="+context+",\n"+
+            "params="+map.toString();
+        return retval;
+    }
+
 }
