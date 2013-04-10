@@ -1,6 +1,7 @@
 CORS
 
 * what 
+
 This is a Jenkins plugin that enables CORS.
 
 CORS allows a server to tell browsers that they are allowed to
@@ -40,16 +41,16 @@ implementation of the spec.
 
 * things that are working, one thing that is broken
 
-The class CrossOriginFilter provides a correct CORS
-implementation. The FilterConfigWrapper class provides a way to push
+The class CrossOriginFilter provides a correct CORS implementation (I
+believe). The FilterConfigWrapper class provides a way to push
 configuration values into that servlet filter. The .jelly files
 provide the UI for all the fields a user might need in order to
 configure CORS as they desire.
 
-However, the thing I don't understand is (hilariously) how to pass the
-parameters from the jelly files into the Plugin itself. This requires
-more knowledge about Jenkins's plugin system than is easy to extract
-from Jenkins documentation system.
+However, the basic thing I don't understand is (hilariously) how to
+pass the parameters from the jelly files into the Plugin itself. This
+requires more knowledge about Jenkins's plugin system than is easy to
+extract from Jenkins documentation system.
 
 * useful links
 
