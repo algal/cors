@@ -118,6 +118,15 @@ public class CrossOriginFilter implements Filter
     private static final String ANY_ORIGIN = "*";
     private static final List<String> SIMPLE_HTTP_METHODS = Arrays.asList("GET", "POST", "HEAD");
 
+    public static final String DEFAULT_ALLOWED_ORIGINS = "*";
+    public static final String DEFAULT_ALLOWED_METHODS = "GET,POST,HEAD";
+    public static final String DEFAULT_ALLOWED_HEADERS = "X-Requested-With,Content-Type,Accept,Origin";
+    public static final String DEFAULT_PREFLIGHT_MAX_AGE = "1800";
+    public static final String DEFAULT_ALLOW_CREDENTIALS = "true";
+    public static final String DEFAULT_EXPOSED_HEADERS = "";
+    public static final String DEFAULT_OLD_CHAIN_PREFLIGHT = "forwardPreflight";
+    public static final String DEFAULT_CHAIN_PREFLIGHT = "true";
+
     private boolean anyOriginAllowed;
     private List<String> allowedOrigins = new ArrayList<String>();
     private List<String> allowedMethods = new ArrayList<String>();
@@ -131,7 +140,7 @@ public class CrossOriginFilter implements Filter
     {
         String allowedOriginsConfig = config.getInitParameter(ALLOWED_ORIGINS_PARAM);
         if (allowedOriginsConfig == null)
-            allowedOriginsConfig = "*";
+            allowedOriginsConfig = DEFAULT_ALLOWED_ORIGINS;
         String[] allowedOrigins = allowedOriginsConfig.split(",");
         for (String allowedOrigin : allowedOrigins)
         {
@@ -153,17 +162,17 @@ public class CrossOriginFilter implements Filter
 
         String allowedMethodsConfig = config.getInitParameter(ALLOWED_METHODS_PARAM);
         if (allowedMethodsConfig == null)
-            allowedMethodsConfig = "GET,POST,HEAD";
+            allowedMethodsConfig = DEFAULT_ALLOWED_METHODS;
         allowedMethods.addAll(Arrays.asList(allowedMethodsConfig.split(",")));
 
         String allowedHeadersConfig = config.getInitParameter(ALLOWED_HEADERS_PARAM);
         if (allowedHeadersConfig == null)
-            allowedHeadersConfig = "X-Requested-With,Content-Type,Accept,Origin";
+            allowedHeadersConfig = DEFAULT_ALLOWED_HEADERS;
         allowedHeaders.addAll(Arrays.asList(allowedHeadersConfig.split(",")));
 
         String preflightMaxAgeConfig = config.getInitParameter(PREFLIGHT_MAX_AGE_PARAM);
         if (preflightMaxAgeConfig == null)
-            preflightMaxAgeConfig = "1800"; // Default is 30 minutes
+            preflightMaxAgeConfig = DEFAULT_PREFLIGHT_MAX_AGE; // Default is 30 minutes
         try
         {
             preflightMaxAge = Integer.parseInt(preflightMaxAgeConfig);
@@ -175,12 +184,12 @@ public class CrossOriginFilter implements Filter
 
         String allowedCredentialsConfig = config.getInitParameter(ALLOW_CREDENTIALS_PARAM);
         if (allowedCredentialsConfig == null)
-            allowedCredentialsConfig = "true";
+            allowedCredentialsConfig = DEFAULT_ALLOW_CREDENTIALS;
         allowCredentials = Boolean.parseBoolean(allowedCredentialsConfig);
 
         String exposedHeadersConfig = config.getInitParameter(EXPOSED_HEADERS_PARAM);
         if (exposedHeadersConfig == null)
-            exposedHeadersConfig = "";
+            exposedHeadersConfig = DEFAULT_EXPOSED_HEADERS;
         exposedHeaders.addAll(Arrays.asList(exposedHeadersConfig.split(",")));
 
         String chainPreflightConfig = config.getInitParameter(OLD_CHAIN_PREFLIGHT_PARAM);
@@ -189,7 +198,7 @@ public class CrossOriginFilter implements Filter
         else
             chainPreflightConfig = config.getInitParameter(CHAIN_PREFLIGHT_PARAM);
         if (chainPreflightConfig == null)
-            chainPreflightConfig = "true";
+            chainPreflightConfig = DEFAULT_CHAIN_PREFLIGHT;
         chainPreflight = Boolean.parseBoolean(chainPreflightConfig);
 
         LOG.log(Level.CONFIG,"Cross-origin filter configuration: " +
