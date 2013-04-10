@@ -71,18 +71,29 @@ extract from Jenkins documentation system.
 
   Notes:
 
-  - neither implementation calculates default ports based on scheme
-    when port is unspecified
+  - neither implementation calculates the default port based on the
+    scheme when URL port is unspecified
 
-    this would result in failed matches when one specifies the port
-    explicitly, and the other relies on it being the default.
+    by not doing so, they are both susceptible to failed origin
+    matches when, e.g., the client specifies the default port
+    explicitly, and the server's whitelist omits it, or vice versa.
 
   The TransasctionCompany version is much bigger but seems more
   full-featured in a few respects:
 
-  - tags requests to expose their CORS status to downstream processors
-  - permits requests with only one origin
-    this fits the most recent version of the spec
+  - it tags requests to expose their CORS status to downstream
+    processors
+  - permits only requests listing a single origin, which fits the most
+    recent version of the spec
   - lots of precondition checks
   - fine-grained exceptions
+  - (it seems) incorrectly applies IDNA canonicalization to the origin
+    sent from the client, where it really needed for the origin
+    supplied by the user as a server configuration. We assume clients
+    apply IDNA canonicalization themselves.
+
+  The Jetty version has some bugs:
+  - doesn't clear allowExposedHeaders on destroy()
+  - defaults to chaining preflight requests (?!)
+  - accepts lists of origins from the client.
 
