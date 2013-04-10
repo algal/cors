@@ -36,17 +36,17 @@ public class PluginImpl
     private static final String DEFAULT_ALLOWED_METHODS   = "GET,POST,HEAD";
     private static final String DEFAULT_ALLOWED_HEADERS   = "X-Requested-With,Content-Type,Accept,Origin";
     private static final String DEFAULT_PREFLIGHT_MAX_AGE = "1800";
-    private static final String DEFAULT_ALLOW_CREDENTIALS = "true";
+    private static final boolean DEFAULT_ALLOW_CREDENTIALS = true;
     private static final String DEFAULT_EXPOSED_HEADERS   = "";
-    private static final String DEFAULT_CHAIN_PREFLIGHT   = "false";
+    private static final boolean DEFAULT_CHAIN_PREFLIGHT   = false;
 
     private String allowedOrigins;
     private String allowedMethods;
     private String allowedHeaders;
     private String preflightMaxAge;
-    private String allowCredentials; // bool
+    private boolean allowCredentials;
     private String exposedHeaders;
-    private String chainPreflight; // bool
+    private boolean chainPreflight;
 
     private ServletContext context;
     private CrossOriginFilter filter;
@@ -69,9 +69,9 @@ public class PluginImpl
                       final String allowedMethods,
                       final String allowedHeaders,
                       final String preflightMaxAge,
-                      final String allowCredentials,
+                      final boolean allowCredentials,
                       final String exposedHeaders,
-                      final String chainPreflight)
+                      final boolean chainPreflight)
     {
         super();
         LOG.finer("entry");
@@ -90,10 +90,10 @@ public class PluginImpl
         this.chainPreflight   = chainPreflight; 
     }
 
-    public String getChainPreflight() { return this.chainPreflight; }
-    public void setChainPreflight(final String v) { this.chainPreflight = chainPreflight; }
-    public String getAllowCredentials() {return this.allowCredentials;}
-    public void setAllowCredentials(final String v) { this.allowCredentials = allowCredentials; }
+    public boolean isChainPreflight() { return this.chainPreflight; }
+    public void setChainPreflight(final boolean v) { this.chainPreflight = chainPreflight; }
+    public boolean getAllowCredentials() {return this.allowCredentials;}
+    public void isAllowCredentials(final boolean v) { this.allowCredentials = allowCredentials; }
     public String getAllowedOrigins() { return this.allowedOrigins; }
     public void setAllowedOrigins(final String allowedOrigins) { this.allowedOrigins = allowedOrigins; }
     public String getAllowedMethods() { return this.allowedMethods; }
@@ -135,9 +135,9 @@ public class PluginImpl
                 put(CrossOriginFilter.ALLOWED_METHODS_PARAM   , allowedMethods );
                 put(CrossOriginFilter.ALLOWED_HEADERS_PARAM   , allowedHeaders );
                 put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM , preflightMaxAge );
-                put(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM , allowCredentials );
+                put(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM , (allowCredentials ? "true" : "false") );
                 put(CrossOriginFilter.EXPOSED_HEADERS_PARAM   , exposedHeaders );
-                put(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM   , chainPreflight );
+                put(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM   , (chainPreflight ? "true" : "false") );
             }};
         FilterConfigWrapper configWrapper = new FilterConfigWrapper("filterName",this.context,paramMap);
 
