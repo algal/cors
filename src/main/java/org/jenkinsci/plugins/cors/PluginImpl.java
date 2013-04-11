@@ -118,6 +118,15 @@ public class PluginImpl
     public void start() throws Exception {
         super.start();
         LOG.finer("entry");
+        // create and install the filter
+        CrossOriginFilter myFilter = new CrossOriginFilter();
+        PluginServletFilter.addFilter(myFilter);
+        this.filter = myFilter;
+    }
+
+    @Override
+    public void postInitialize() throws Exception {
+        super.postInitialize();
 
         // log config field values in the instance variables 
         LOG.config("start() called with following state: " +
@@ -140,12 +149,8 @@ public class PluginImpl
                 put(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM   , (chainPreflight ? "true" : "false") );
             }};
         FilterConfigWrapper configWrapper = new FilterConfigWrapper("filterName",this.context,paramMap);
-
         // pass the config object to initialize the plugin
-        CrossOriginFilter myFilter = new CrossOriginFilter();
-        PluginServletFilter.addFilter(myFilter);
-        myFilter.init(configWrapper);
-        this.filter = myFilter;
+        filter.init(configWrapper);
     }
 
     /** {@inheritDoc} */
