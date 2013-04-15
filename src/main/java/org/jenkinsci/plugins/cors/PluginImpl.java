@@ -94,8 +94,14 @@ public class PluginImpl
     public void setChainPreflight(final boolean v) { this.chainPreflight = chainPreflight; }
     public boolean getAllowCredentials() {return this.allowCredentials;}
     public void isAllowCredentials(final boolean v) { this.allowCredentials = allowCredentials; }
-    public String getAllowedOrigins() { return this.allowedOrigins; }
-    public void setAllowedOrigins(final String allowedOrigins) { this.allowedOrigins = allowedOrigins; }
+    public String getAllowedOrigins() { 
+        LOG.entering("PluginImpl","getAllowedOrigins");
+        return this.allowedOrigins;
+    }
+    public void setAllowedOrigins(final String allowedOrigins) {
+        LOG.entering("PluginImpl","setAllowedOrigins");
+        this.allowedOrigins = allowedOrigins;
+    }
     public String getAllowedMethods() { return this.allowedMethods; }
     public void setAllowedMethods(final String allowedMethods) { this.allowedMethods = allowedMethods; }
     public String getAllowedHeaders() { return this.allowedHeaders; }
