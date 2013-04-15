@@ -34,7 +34,7 @@ public class PluginImpl
     // defaults
     private static final String DEFAULT_ALLOWED_ORIGINS   = "*";
     private static final String DEFAULT_ALLOWED_METHODS   = "GET,POST,HEAD";
-    private static final String DEFAULT_ALLOWED_HEADERS   = "X-Requested-With,Content-Type,Accept,Origin";
+    private static final String DEFAULT_ALLOWED_HEADERS   = "X-Requested-With,Content-Type,Accept,Origin,Authorization";
     private static final String DEFAULT_PREFLIGHT_MAX_AGE = "1800";
     private static final boolean DEFAULT_ALLOW_CREDENTIALS = true;
     private static final String DEFAULT_EXPOSED_HEADERS   = "";
