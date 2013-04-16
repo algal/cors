@@ -184,8 +184,16 @@ public class PluginImpl
                    CrossOriginFilter.CHAIN_PREFLIGHT_PARAM   + "=" + formData.getString(  CrossOriginFilter.CHAIN_PREFLIGHT_PARAM) );
         
         LOG.config("configure called with formData.getString(\"name\") = " + formData.getString("name"));
-        req.bindJSON(this, formData);
-        //        save();
+
+        allowedOrigins   =   formData.getString(  CrossOriginFilter.ALLOWED_ORIGINS_PARAM);
+        allowedMethods   =   formData.getString(  CrossOriginFilter.ALLOWED_METHODS_PARAM);
+        allowedHeaders   =   formData.getString(  CrossOriginFilter.ALLOWED_HEADERS_PARAM);
+        preflightMaxAge  =   formData.getString(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM);
+        allowCredentials =   formData.getString(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM).equals("true");
+        exposedHeaders   =   formData.getString(  CrossOriginFilter.EXPOSED_HEADERS_PARAM);
+        chainPreflight   =   formData.getString(  CrossOriginFilter.CHAIN_PREFLIGHT_PARAM).equals("true");
+
+        //        save();  // causes crash (?!)
         return ;
     }
 }
