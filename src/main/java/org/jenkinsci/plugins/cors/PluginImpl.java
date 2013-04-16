@@ -60,8 +60,7 @@ public class PluginImpl
              DEFAULT_ALLOW_CREDENTIALS,
              DEFAULT_EXPOSED_HEADERS,
              DEFAULT_CHAIN_PREFLIGHT);
-        LOG.finer("entry");
-        LOG.entering("","PluginImpl");
+        LOG.entering("PluginImpl","PluginImpl");
     }
 
     @DataBoundConstructor
@@ -74,7 +73,7 @@ public class PluginImpl
                       final boolean chainPreflight)
     {
         super();
-        LOG.finer("entry");
+        LOG.entering("PluginImpl","PluginImpl(:String,:String,:String,:String,:boolean,:String,:boolean)");
         // try {
         //     load(); 
         // }
@@ -115,7 +114,7 @@ public class PluginImpl
     @Override
     public void setServletContext(ServletContext context) {
         super.setServletContext(context);
-        LOG.finer("entry");
+        LOG.entering("PluginImpl","setServletContext");
         this.context = context;
     }
 
@@ -123,7 +122,7 @@ public class PluginImpl
     @Override
     public void start() throws Exception {
         super.start();
-        LOG.finer("entry");
+        LOG.entering("PluginImpl","start");
         // create and install the filter
         CrossOriginFilter myFilter = new CrossOriginFilter();
         PluginServletFilter.addFilter(myFilter);
@@ -133,7 +132,7 @@ public class PluginImpl
     @Override
     public void postInitialize() throws Exception {
         super.postInitialize();
-
+        LOG.entering("PluginImpl","postInitialize");
         // log config field values in the instance variables 
         LOG.config("start() called with following state: " +
                    CrossOriginFilter.ALLOWED_ORIGINS_PARAM   + "=" +  allowedOrigins   + ", " +
@@ -163,7 +162,7 @@ public class PluginImpl
     @Override
     public void stop() throws Exception {
         super.stop();
-        LOG.finer("entry");
+        LOG.entering("PluginImpl","stop");
         filter.destroy();
     }
 
@@ -174,6 +173,7 @@ public class PluginImpl
                javax.servlet.ServletException,
                hudson.model.Descriptor.FormException
     {
+        LOG.entering("PluginImpl","configure");
         LOG.config("configure() called with form data: " + 
                    CrossOriginFilter.ALLOWED_ORIGINS_PARAM   + "=" + formData.getString(  CrossOriginFilter.ALLOWED_ORIGINS_PARAM) + ", " +
                    CrossOriginFilter.ALLOWED_METHODS_PARAM   + "=" + formData.getString(  CrossOriginFilter.ALLOWED_METHODS_PARAM) + ", " +
