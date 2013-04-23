@@ -8,6 +8,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import hudson.Plugin;
+import hudson.Extension;
 import hudson.model.Hudson;
 import hudson.util.PluginServletFilter;
 import hudson.model.Descriptor.FormException;
@@ -15,6 +16,8 @@ import hudson.model.Descriptor.FormException;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import net.sf.json.JSONObject;
+
+import jenkins.model.Jenkins;
 
 /**
  * Entry point of the plugin.
@@ -40,6 +43,7 @@ public class PluginImpl
     private static final String DEFAULT_EXPOSED_HEADERS   = "";
     private static final boolean DEFAULT_CHAIN_PREFLIGHT   = false;
 
+    // ivars
     private String allowedOrigins;
     private String allowedMethods;
     private String allowedHeaders;
@@ -74,12 +78,27 @@ public class PluginImpl
     {
         super();
         LOG.entering("PluginImpl","PluginImpl(:String,:String,:String,:String,:boolean,:String,:boolean)");
-        // try {
-        //     load(); 
-        // }
-        // catch (java.io.IOException e) {
-        //     LOG.severe("error trying to load serialized plugin values");
-        // }
+        try {
+            if ( Jenkins.XSTREAM == null ) {
+                LOG.severe("Jenkins.XSTREAM is null");
+            }
+            else if ( Jenkins.getInstance() == null ) {
+                LOG.severe("Jenkins.getInstance() is null");
+            }
+            else {
+                try {
+                    load(); 
+                }
+                catch( java.lang.NullPointerException n) {
+                    LOG.severe(" caught an NPE trying to call Plugin.load(), which almost certainly results from Plugin.wrapper == null");
+                    throw n;
+                }
+            }
+        }
+        catch (java.io.IOException e) {
+            LOG.severe("error trying to load serialized plugin values");
+        }
+
         this.allowedOrigins   = allowedOrigins;
         this.allowedMethods   = allowedMethods;
         this.allowedHeaders   = allowedHeaders;
