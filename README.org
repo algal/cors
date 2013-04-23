@@ -39,7 +39,7 @@ CORS. This servlet filter was adapted from the servlet filter that
 ships with the Jetty web server. It seems to be a correct
 implementation of the spec.
 
-* things that are working, one thing that is broken
+* things that are working
 
 The class CrossOriginFilter provides a correct CORS implementation (I
 believe). The FilterConfigWrapper class provides a way to push
@@ -47,10 +47,16 @@ configuration values into that servlet filter. The .jelly files
 provide the UI for all the fields a user might need in order to
 configure CORS as they desire.
 
-However, the basic thing I don't understand is (hilariously) how to
-pass the parameters from the jelly files into the Plugin itself. This
-requires more knowledge about Jenkins's plugin system than is easy to
-extract from Jenkins documentation system.
+* the  one thing that is broken
+
+However, the basic thing I don't understand is:
+- how to make Jenkins correctly wrap the Plugin object in a PluginWrapper
+
+- how to make Jenkins populate the .jelly file fields with the values
+  from the plugin's properties. Perhaps the plugin needs a descriptor?
+
+This requires more knowledge about Jenkins's plugin system than is
+easy to extract from Jenkins documentation system.
 
 * useful links
 
