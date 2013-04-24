@@ -37,28 +37,26 @@ public class PluginImpl
     private final static Logger LOG = Logger.getLogger("org.jenkinsci.plugins.cors.PluginImpl");
 
     // defaults
-    private static final String DEFAULT_ALLOWED_ORIGINS   = "*";
-    private static final String DEFAULT_ALLOWED_METHODS   = "GET,POST,HEAD";
-    private static final String DEFAULT_ALLOWED_HEADERS   = "X-Requested-With,Content-Type,Accept,Origin,Authorization";
-    private static final String DEFAULT_PREFLIGHT_MAX_AGE = "1800";
+    private static final String  DEFAULT_ALLOWED_ORIGINS   = "*";
+    private static final String  DEFAULT_ALLOWED_METHODS   = "GET,POST,HEAD";
+    private static final String  DEFAULT_ALLOWED_HEADERS   = "X-Requested-With,Content-Type,Accept,Origin,Authorization";
+    private static final String  DEFAULT_PREFLIGHT_MAX_AGE = "1800";
     private static final boolean DEFAULT_ALLOW_CREDENTIALS = true;
-    private static final String DEFAULT_EXPOSED_HEADERS   = "";
+    private static final String  DEFAULT_EXPOSED_HEADERS   = "";
     private static final boolean DEFAULT_CHAIN_PREFLIGHT   = false;
 
     // config fields, which should be serialized
-    private String allowedOrigins;
-    private String allowedMethods;
-    private String allowedHeaders;
-    private String preflightMaxAge;
+    private String  allowedOrigins;
+    private String  allowedMethods;
+    private String  allowedHeaders;
+    private String  preflightMaxAge;
     private boolean allowCredentials;
-    private String exposedHeaders;
+    private String  exposedHeaders;
     private boolean chainPreflight;
 
     // internal state, which should not be serialized
-
     @XStreamOmitField
     private ServletContext context;
-
     @XStreamOmitField
     private CrossOriginFilter filter;
 
