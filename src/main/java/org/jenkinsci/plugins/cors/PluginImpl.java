@@ -93,9 +93,8 @@ public class PluginImpl
     public boolean getAllowCredentials() {return this.allowCredentials;}
     public void isAllowCredentials(final boolean v) { this.allowCredentials = allowCredentials; }
     public String getAllowedOrigins() { 
-        LOG.entering("PluginImpl","getAllowedOrigins");
+        LOG.finer("PluginImpl.getAllowedOrigins");
         return this.allowedOrigins;
-        LOG.exiting("PluginImpl","getAllowedOrigins");
     }
     public void setAllowedOrigins(final String allowedOrigins) {
         LOG.entering("PluginImpl","setAllowedOrigins");
