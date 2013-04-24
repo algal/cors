@@ -157,8 +157,15 @@ public class PluginImpl
                    CrossOriginFilter.EXPOSED_HEADERS_PARAM   + "=" +  exposedHeaders   + ", " +
                    CrossOriginFilter.CHAIN_PREFLIGHT_PARAM   + "=" +  chainPreflight)   ;
 
-        // wrap them in a FilterConfig object
-        Map<String,String> paramMap = new HashMap<String,String>() {{
+        // generate a FilterConfigWrapper from this's state
+        FilterConfigWrapper configWrapper = createFilterConfigWrapper();
+        filter.init(configWrapper);
+        LOG.exiting("PluginImpl","postInitialize");
+    }
+
+    private FilterConfigWrapper createFilterConfigWrapper() {
+        // put plugin's config properties in a Map
+        final Map<String,String> paramMap = new HashMap<String,String>() {{
                 put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM   , allowedOrigins );
                 put(CrossOriginFilter.ALLOWED_METHODS_PARAM   , allowedMethods );
                 put(CrossOriginFilter.ALLOWED_HEADERS_PARAM   , allowedHeaders );
@@ -167,10 +174,9 @@ public class PluginImpl
                 put(CrossOriginFilter.EXPOSED_HEADERS_PARAM   , exposedHeaders );
                 put(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM   , (chainPreflight ? "true" : "false") );
             }};
-        FilterConfigWrapper configWrapper = new FilterConfigWrapper("filterName",this.context,paramMap);
-        // pass the config object to initialize the plugin
-        filter.init(configWrapper);
-        LOG.exiting("PluginImpl","postInitialize");
+        // wrap them in a FilterConfigWrapper, with the servlet context
+        final FilterConfigWrapper configWrapper = new FilterConfigWrapper("filterName",this.context,paramMap);
+        return configWrapper;
     }
 
     /** {@inheritDoc} */
@@ -209,7 +215,12 @@ public class PluginImpl
         exposedHeaders   =   formData.getString(  CrossOriginFilter.EXPOSED_HEADERS_PARAM);
         chainPreflight   =   formData.getString(  CrossOriginFilter.CHAIN_PREFLIGHT_PARAM).equals("true");
 
-        save();  
+        LOG.finer("saving() new config values");
+        save();
+
+        LOG.finer("re-initializaing filter with new values");
+        FilterConfigWrapper configWrapper = createFilterConfigWrapper();
+        this.filter.init(configWrapper);
 
         LOG.exiting("PluginImpl","configure");
         return ;
