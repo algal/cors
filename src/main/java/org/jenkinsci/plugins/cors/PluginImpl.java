@@ -78,27 +78,6 @@ public class PluginImpl
     {
         super();
         LOG.entering("PluginImpl","PluginImpl(:String,:String,:String,:String,:boolean,:String,:boolean)");
-        try {
-            if ( Jenkins.XSTREAM == null ) {
-                LOG.severe("Jenkins.XSTREAM is null");
-            }
-            else if ( Jenkins.getInstance() == null ) {
-                LOG.severe("Jenkins.getInstance() is null");
-            }
-            else {
-                try {
-                    load(); 
-                }
-                catch( java.lang.NullPointerException n) {
-                    LOG.severe(" caught an NPE trying to call Plugin.load(), which almost certainly results from Plugin.wrapper == null");
-                    throw n;
-                }
-            }
-        }
-        catch (java.io.IOException e) {
-            LOG.severe("error trying to load serialized plugin values");
-        }
-
         this.allowedOrigins   = allowedOrigins;
         this.allowedMethods   = allowedMethods;
         this.allowedHeaders   = allowedHeaders;
@@ -106,6 +85,7 @@ public class PluginImpl
         this.allowCredentials = allowCredentials;
         this.exposedHeaders   = exposedHeaders;
         this.chainPreflight   = chainPreflight; 
+        LOG.exiting("PluginImpl","PluginImpl(:String,:String,:String,:String,:boolean,:String,:boolean)");
     }
 
     public boolean isChainPreflight() { return this.chainPreflight; }
@@ -115,10 +95,12 @@ public class PluginImpl
     public String getAllowedOrigins() { 
         LOG.entering("PluginImpl","getAllowedOrigins");
         return this.allowedOrigins;
+        LOG.exiting("PluginImpl","getAllowedOrigins");
     }
     public void setAllowedOrigins(final String allowedOrigins) {
         LOG.entering("PluginImpl","setAllowedOrigins");
         this.allowedOrigins = allowedOrigins;
+        LOG.exiting("PluginImpl","setAllowedOrigins");
     }
     public String getAllowedMethods() { return this.allowedMethods; }
     public void setAllowedMethods(final String allowedMethods) { this.allowedMethods = allowedMethods; }
@@ -142,10 +124,35 @@ public class PluginImpl
     public void start() throws Exception {
         super.start();
         LOG.entering("PluginImpl","start");
+        try {
+            if ( Jenkins.XSTREAM == null ) {
+                LOG.severe("Jenkins.XSTREAM is null");
+            }
+            else if ( Jenkins.getInstance() == null ) {
+                LOG.severe("Jenkins.getInstance() is null");
+            }
+            else {
+                try {
+                    LOG.finer("about to call load()");
+                    load(); 
+                }
+                catch( java.lang.NullPointerException n) {
+                    LOG.severe(" caught an NPE trying to call Plugin.load(), which almost certainly results from Plugin.wrapper == null");
+                    throw n;
+                }
+            }
+        }
+        catch (java.io.IOException e) {
+            LOG.severe("error trying to load serialized plugin values");
+        }
+
+        LOG.fine("creating CrossOriginFilter");
         // create and install the filter
         CrossOriginFilter myFilter = new CrossOriginFilter();
         PluginServletFilter.addFilter(myFilter);
         this.filter = myFilter;
+
+        LOG.exiting("PluginImpl","start");
     }
 
     @Override
@@ -175,6 +182,7 @@ public class PluginImpl
         FilterConfigWrapper configWrapper = new FilterConfigWrapper("filterName",this.context,paramMap);
         // pass the config object to initialize the plugin
         filter.init(configWrapper);
+        LOG.exiting("PluginImpl","postInitialize");
     }
 
     /** {@inheritDoc} */
@@ -183,6 +191,7 @@ public class PluginImpl
         super.stop();
         LOG.entering("PluginImpl","stop");
         filter.destroy();
+        LOG.exiting("PluginImpl","stop");
     }
 
     @Override
@@ -213,6 +222,7 @@ public class PluginImpl
         chainPreflight   =   formData.getString(  CrossOriginFilter.CHAIN_PREFLIGHT_PARAM).equals("true");
 
         //        save();  // causes crash (?!)
+        LOG.exiting("PluginImpl","configure");
         return ;
     }
 }
