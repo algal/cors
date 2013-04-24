@@ -17,6 +17,8 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import net.sf.json.JSONObject;
 
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import jenkins.model.Jenkins;
 
 /**
@@ -43,7 +45,7 @@ public class PluginImpl
     private static final String DEFAULT_EXPOSED_HEADERS   = "";
     private static final boolean DEFAULT_CHAIN_PREFLIGHT   = false;
 
-    // ivars
+    // config fields, which should be serialized
     private String allowedOrigins;
     private String allowedMethods;
     private String allowedHeaders;
@@ -52,7 +54,12 @@ public class PluginImpl
     private String exposedHeaders;
     private boolean chainPreflight;
 
+    // internal state, which should not be serialized
+
+    @XStreamOmitField
     private ServletContext context;
+
+    @XStreamOmitField
     private CrossOriginFilter filter;
 
     public PluginImpl()
@@ -64,7 +71,7 @@ public class PluginImpl
              DEFAULT_ALLOW_CREDENTIALS,
              DEFAULT_EXPOSED_HEADERS,
              DEFAULT_CHAIN_PREFLIGHT);
-        LOG.entering("PluginImpl","PluginImpl");
+        LOG.finer("PluginImpl.PluginImpl() just finished calling PluginImpl.PluginImpl(args)");
     }
 
     @DataBoundConstructor
@@ -124,24 +131,8 @@ public class PluginImpl
         super.start();
         LOG.entering("PluginImpl","start");
         try {
-            if ( Jenkins.XSTREAM == null ) {
-                LOG.severe("Jenkins.XSTREAM is null");
-            }
-            else if ( Jenkins.getInstance() == null ) {
-                LOG.severe("Jenkins.getInstance() is null");
-            }
-            else {
-                try {
-                    LOG.finer("about to call load()");
-                    load(); 
-                }
-                catch( java.lang.NullPointerException n) {
-                    LOG.severe(" caught an NPE trying to call Plugin.load(), which almost certainly results from Plugin.wrapper == null");
-                    throw n;
-                }
-            }
-        }
-        catch (java.io.IOException e) {
+            load(); 
+        } catch (java.io.IOException e) {
             LOG.severe("error trying to load serialized plugin values");
         }
 
@@ -220,7 +211,8 @@ public class PluginImpl
         exposedHeaders   =   formData.getString(  CrossOriginFilter.EXPOSED_HEADERS_PARAM);
         chainPreflight   =   formData.getString(  CrossOriginFilter.CHAIN_PREFLIGHT_PARAM).equals("true");
 
-        //        save();  // causes crash (?!)
+        save();  
+
         LOG.exiting("PluginImpl","configure");
         return ;
     }
