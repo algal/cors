@@ -31,7 +31,17 @@ also JSON-P. But it has various limitations. It complicates your
 client-side JS, provides worse error-handling, and cannot be used for
 certain kinds of requests. For instance, it cannot be used for http
 Basic Access-authenticated POST requests, which Jenkins requires for
-parameterized builds.
+parameterized builds. That might not be good enough.
+
+Or, if your Jenkins is being run under some other server, like Apache
+or nginx, then you could enable CORS within that server. Or, you could
+setup a reverse proxy at the domain of your streamlined webpage, so
+that your JS talks to that page (on the same-origin), and then the
+server relays the traffic to Jenkins.
+
+But if you're running Jenkins using its own embedded server, and don't
+want to add new bits of kit to your stack, then this plugin should
+work.
 
 * how
 
@@ -48,10 +58,15 @@ configuration values into that servlet filter. The .jelly files
 provide the UI for all the fields a user might need in order to
 configure CORS as they desire.
 
-* the one thing that is broken
+* things that are broken, or questionable
 
-Jenkins is not correctly rendering the help files associated with each
-of the configuration variables.
+Broken. Jenkins is not correctly rendering the html help files associated with
+each of the configuration variables.
+
+Questionable. This plugin just adds a servlet filter to the chain of
+servlet filters that Jenkins uses. It does not control where this
+filter is inserted in the chain. If an earlier filter blocks traffic
+before it reaches this plugin's filter, then that will break things.
 
 * useful links
 
