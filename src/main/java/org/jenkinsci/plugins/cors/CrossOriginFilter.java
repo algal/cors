@@ -47,16 +47,18 @@ import java.util.logging.Level;
  * efficient and less reactive to failures).</p>
  * <p>This filter allows the following configuration parameters:
  * <ul>
- * <li><b>allowedOrigins</b>, a comma separated list of origins that are
- * allowed to access the resources. Default value is <b>*</b>, meaning all
- * origins.<br />
- * If an allowed origin contains one or more * characters (for example
- * http://*.domain.com), then "*" characters are converted to ".*", "."
- * characters are escaped to "\." and the resulting allowed origin
- * interpreted as a regular expression.<br />
- * Allowed origins can therefore be more complex expressions such as
- * https?://*.domain.[a-z]{3} that matches http or https, multiple subdomains
- * and any 3 letter top-level domain (.com, .net, .org, etc.).</li>
+ * <li><b>allowedOrigins</b>, a comma separated list of origins that
+ * are allowed to access the resources. Default value is <b>*</b>,
+ * meaning all origins (but please note that, according to the spec,
+ * this will not be accepted by browsers when
+ * allowCredentials=true).<br /> If an allowed origin contains one or
+ * more * characters (for example http://*.domain.com), then "*"
+ * characters are converted to ".*", "."  characters are escaped to
+ * "\." and the resulting allowed origin interpreted as a regular
+ * expression.<br /> Allowed origins can therefore be more complex
+ * expressions such as https?://*.domain.[a-z]{3} that matches http or
+ * https, multiple subdomains and any 3 letter top-level domain (.com,
+ * .net, .org, etc.).</li>
  * <li><b>allowedMethods</b>, a comma separated list of HTTP methods that
  * are allowed to be used when accessing the resources. Default value is
  * <b>GET,POST,HEAD</b></li>
@@ -297,11 +299,15 @@ public class CrossOriginFilter implements Filter
      *
      * @return whether any of these match the allowed origins
      *
-     * This method allows for the Origin: header to present a list of
-     * origin, rather than a single origin. The latest
-     * (2013-04-05T0926) version of the spec only permits user agents
-     * to present a single origin, not a list.
+     * FIXME: This method allows for the Origin: header to present a
+     * space-delimited list of origins rather than a single
+     * origin. This is a bug. The latest (2013-04-05T0926) version of
+     * the spec only permits user agents to present a single origin,
+     * not a list. (The latest version of the spec does allow the
+     * server to present a list of origins, but that is a separate
+     * issue.)
      *
+     * TODO:
      * This method does a direct, case-sensitive string comparsion of
      * the Origin: header field value and the permitted
      * origin. According to the spec, origin values in the header
