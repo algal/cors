@@ -47,18 +47,24 @@ import java.util.logging.Level;
  * efficient and less reactive to failures).</p>
  * <p>This filter allows the following configuration parameters:
  * <ul>
- * <li><b>allowedOrigins</b>, a comma separated list of origins that
- * are allowed to access the resources. Default value is <b>*</b>,
- * meaning all origins (but please note that, according to the spec,
- * this will not be accepted by browsers when
- * allowCredentials=true).<br /> If an allowed origin contains one or
- * more * characters (for example http://*.domain.com), then "*"
- * characters are converted to ".*", "."  characters are escaped to
- * "\." and the resulting allowed origin interpreted as a regular
- * expression.<br /> Allowed origins can therefore be more complex
- * expressions such as https?://*.domain.[a-z]{3} that matches http or
- * https, multiple subdomains and any 3 letter top-level domain (.com,
- * .net, .org, etc.).</li>
+ * 
+ * <li><b>allowedOrigins</b>, a comma-separated list of the ascii
+ * serializations of origins that are allowed to access the resources. An
+ * ascii serialized origin looks like a URL containing only the scheme,
+ * the authority, the port number (if it's non-default for that scheme),
+ * and no path component. For example, two valid origins are
+ * http://foo.com, or http://foo.com:8080.<br/>The default value
+ * is <b>*</b>, meaning allow all origins. In this case, the server
+ * echoes back whatever origin was provided by the request header.<br />
+ * If an allowed origin contains one or more "*" characters (for example
+ * http://*.domain.com), then "*" characters are converted to ".*", "."
+ * characters are escaped to "\."  and the resulting string is
+ * interpreted as a regular expression. Allowed origins can therefore be
+ * more complex expressions: such as http://*.example.com, which matches
+ * any subdomain of example.com; or https?://*.example.[a-z]{3}(:[0-9]+)?
+ * which matches a scheme of http or https, all subdomains, any 3 letter
+ * top-level domain, and any port number (.com, .net, .org, etc.).
+ * 
  * <li><b>allowedMethods</b>, a comma separated list of HTTP methods that
  * are allowed to be used when accessing the resources. Default value is
  * <b>GET,POST,HEAD</b></li>
