@@ -3,6 +3,6 @@
 -->
 <div>
   <span>
-    The Cross Origin Resource Sharing filter provides CORS support for Jenkins.
+    Provides a Cross Origin Resource Sharing (CORS) support, for accessing the REST API from JavaScript.
   </span>
 </div>
