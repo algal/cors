@@ -12,12 +12,19 @@
     so it should be straightforward to find them.
   -->
   <f:section title="Cross-Origin Resource Sharing">
-    <f:entry title="Allowed Origins"   field="allowedOrigins"   description=""> <f:textbox  value   ="${it.allowedOrigins}" />   </f:entry>
-    <f:entry title="Allowed Methods"   field="allowedMethods"   description=""> <f:textbox  value   ="${it.allowedMethods}" />   </f:entry>
-    <f:entry title="Allowed Headers"   field="allowedHeaders"   description=""> <f:textbox  value   ="${it.allowedHeaders}" />   </f:entry>
-    <f:entry title="Preflight Max Age" field="preflightMaxAge"  description=""> <f:textbox  value   ="${it.preflightMaxAge}" />  </f:entry>
-    <f:entry title="Allow Credentials" field="allowCredentials" description=""> <f:checkbox checked ="${it.allowCredentials}" /> </f:entry>
-    <f:entry title="Exposed Headers"   field="exposedHeaders"   description=""> <f:textbox  value   ="${it.exposedHeaders}" />   </f:entry>
-    <f:entry title="Chain Preflight"   field="chainPreflight"   description=""> <f:checkbox checked ="${it.chainPreflight}" />   </f:entry>
+<!--
+     Because this plugin does not use a descriptor, Jenkins will not auto-detect the help-FIELD.html files.
+
+     However, according to https://wiki.jenkins-ci.org/display/JENKINS/Basic+guide+to+Jelly+usage+in+Jenkins ,
+     an attribute of, e.g.,  help="/plugin/cors/help-allowedOrigins.html" on the first entry tag should work.
+     But it does not.
+-->
+    <f:entry title="Allowed Origins"   > <f:textbox   name="allowedOrigins"   value   ="${it.allowedOrigins}" />   </f:entry>
+    <f:entry title="Allowed Methods"   > <f:textbox   name="allowedMethods"   value   ="${it.allowedMethods}" />   </f:entry>
+    <f:entry title="Allowed Headers"   > <f:textbox   name="allowedHeaders"   value   ="${it.allowedHeaders}" />   </f:entry>
+    <f:entry title="Preflight Max Age" > <f:textbox   name="preflightMaxAge"  value   ="${it.preflightMaxAge}" />  </f:entry>
+    <f:entry title="Allow Credentials" > <f:checkbox  name="allowCredentials" checked ="${it.allowCredentials}" /> </f:entry>
+    <f:entry title="Exposed Headers"   > <f:textbox   name="exposedHeaders"   value   ="${it.exposedHeaders}" />   </f:entry>
+    <f:entry title="Chain Preflight"   > <f:checkbox  name="chainPreflight"   checked ="${it.chainPreflight}" />   </f:entry>
   </f:section>
 </j:jelly>
