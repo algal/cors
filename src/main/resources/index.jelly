@@ -3,6 +3,6 @@
 -->
 <div>
   <span>
-    Provides a Cross Origin Resource Sharing (CORS) support, for accessing the REST API from JavaScript.
+    Provides a Cross Origin Resource Sharing (CORS) support, for accessing Jenkins's REST API from JavaScript hosted on other domains.
   </span>
 </div>
