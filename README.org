@@ -19,18 +19,19 @@ programatically browsing jobs, triggering builds, etc.. Suppose you
 want to use this API to present a streamlined interface to Jenkins,
 for instance, a webpage YourNiceJenkinsUI.com that is only used for
 triggering a particular build. To do this, your webpage must talk to
-Jenkins's REST API. To do this (if your streamlined webpage is just
-HTML/JS) then the JS on your webpage needs to be able to talk to your
-instance of Jenkins at YourJenkinsUI.com. And to do this, you need to
-setup CORS on your Jenkins so that it can tell browsers that it is
-happy to receive traffic that started from YourNiceUI.com. That's
-where this plugin comes in.
+the Jenkins's REST API. To do this (if your streamlined webpage is
+just HTML/JS) then the JS on your webpage needs to be able to talk to
+your instance of Jenkins at YourJenkinsUI.com. And to do this, you
+need to setup CORS on your Jenkins so that it can tell browsers that
+it is happy to receive traffic that started from
+YourNiceUI.com. That's where this plugin comes in.
 
 Are there other ways? Yes. Instead of enabling CORS on Jekins, there's
 also JSON-P. But it has various limitations. It complicates your
-client-side JS, provides worse error-handling, and can be used for
-certain kinds of requests (e.g., authenticated POST requests, which
-are needed for parameterized builds), etc..
+client-side JS, provides worse error-handling, and cannot be used for
+certain kinds of requests. For instance, it cannot be used for http
+Basic Access-authenticated POST requests, which Jenkins requires for
+parameterized builds.
 
 * how
 
@@ -47,16 +48,10 @@ configuration values into that servlet filter. The .jelly files
 provide the UI for all the fields a user might need in order to
 configure CORS as they desire.
 
-* the  one thing that is broken
+* the one thing that is broken
 
-However, the basic thing I don't understand is:
-- how to make Jenkins correctly wrap the Plugin object in a PluginWrapper
-
-- how to make Jenkins populate the .jelly file fields with the values
-  from the plugin's properties. Perhaps the plugin needs a descriptor?
-
-This requires more knowledge about Jenkins's plugin system than is
-easy to extract from Jenkins documentation system.
+Jenkins is not correctly rendering the help files associated with each
+of the configuration variables.
 
 * useful links
 
@@ -80,9 +75,10 @@ easy to extract from Jenkins documentation system.
   - neither implementation calculates the default port based on the
     scheme when URL port is unspecified
 
-    by not doing so, they are both susceptible to failed origin
-    matches when, e.g., the client specifies the default port
-    explicitly, and the server's whitelist omits it, or vice versa.
+    By not doing so, they are both susceptible to failed origin
+    matches when, e.g., the server's whitelist incorrectly specifies
+    the default port. This is essentially a problem of not checking
+    inputs to ensure origins have been correctly canonicalized.
 
   The TransasctionCompany version is much bigger but seems more
   full-featured in a few respects:
@@ -92,14 +88,18 @@ easy to extract from Jenkins documentation system.
   - permits only requests listing a single origin, which fits the most
     recent version of the spec
   - lots of precondition checks
-  - fine-grained exceptions
+  - fine-grained exceptions to signal error conditions
   - (it seems) incorrectly applies IDNA canonicalization to the origin
-    sent from the client, where it really needed for the origin
-    supplied by the user as a server configuration. We assume clients
-    apply IDNA canonicalization themselves.
+    sent from the client, where it is really needed for the origin
+    supplied by the user as a server configuration. We assume
+    conforming clients apply IDNA canonicalization themselves. But an
+    unaware user might quite easily incorrectly put a
+    non-canonicalized URL into the list of allowed origins, not
+    understanding the canonicalization requirement.
 
   The Jetty version has some bugs:
   - doesn't clear allowExposedHeaders on destroy()
   - defaults to chaining preflight requests (?!)
   - accepts lists of origins from the client.
 
+  I have corrected some of the Jetty's verions bugs.
