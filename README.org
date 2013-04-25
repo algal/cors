@@ -60,9 +60,6 @@ configure CORS as they desire.
 
 * things that are broken, or questionable
 
-Broken. Jenkins is not correctly rendering the html help files associated with
-each of the configuration variables.
-
 Questionable. This plugin just adds a servlet filter to the chain of
 servlet filters that Jenkins uses. It does not control where this
 filter is inserted in the chain. If an earlier filter blocks traffic
