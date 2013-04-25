@@ -30,11 +30,11 @@ import jenkins.model.Jenkins;
  * 
  * @author Alexis Gallagher
  */
-public class PluginImpl
+public class CORSPlugin
     extends Plugin
 {
     // instance variables
-    private final static Logger LOG = Logger.getLogger("org.jenkinsci.plugins.cors.PluginImpl");
+    private final static Logger LOG = Logger.getLogger("org.jenkinsci.plugins.cors.CORSPlugin");
 
     // defaults
     private static final String  DEFAULT_ALLOWED_ORIGINS   = "*";
@@ -60,7 +60,7 @@ public class PluginImpl
     @XStreamOmitField
     private CrossOriginFilter filter;
 
-    public PluginImpl()
+    public CORSPlugin()
     {
         this(DEFAULT_ALLOWED_ORIGINS,
              DEFAULT_ALLOWED_METHODS,
@@ -69,11 +69,11 @@ public class PluginImpl
              DEFAULT_ALLOW_CREDENTIALS,
              DEFAULT_EXPOSED_HEADERS,
              DEFAULT_CHAIN_PREFLIGHT);
-        LOG.finer("PluginImpl.PluginImpl() just finished calling PluginImpl.PluginImpl(args)");
+        LOG.finer("CORSPlugin.CORSPlugin() just finished calling CORSPlugin.CORSPlugin(args)");
     }
 
     @DataBoundConstructor
-    public PluginImpl(final String allowedOrigins,
+    public CORSPlugin(final String allowedOrigins,
                       final String allowedMethods,
                       final String allowedHeaders,
                       final String preflightMaxAge,
@@ -82,7 +82,7 @@ public class PluginImpl
                       final boolean chainPreflight)
     {
         super();
-        LOG.entering("PluginImpl","PluginImpl(:String,:String,:String,:String,:boolean,:String,:boolean)");
+        LOG.entering("CORSPlugin","CORSPlugin(:String,:String,:String,:String,:boolean,:String,:boolean)");
         this.allowedOrigins   = allowedOrigins;
         this.allowedMethods   = allowedMethods;
         this.allowedHeaders   = allowedHeaders;
@@ -90,7 +90,7 @@ public class PluginImpl
         this.allowCredentials = allowCredentials;
         this.exposedHeaders   = exposedHeaders;
         this.chainPreflight   = chainPreflight; 
-        LOG.exiting("PluginImpl","PluginImpl(:String,:String,:String,:String,:boolean,:String,:boolean)");
+        LOG.exiting("CORSPlugin","CORSPlugin(:String,:String,:String,:String,:boolean,:String,:boolean)");
     }
 
     public boolean isChainPreflight() { return this.chainPreflight; }
@@ -98,13 +98,13 @@ public class PluginImpl
     public boolean getAllowCredentials() {return this.allowCredentials;}
     public void isAllowCredentials(final boolean v) { this.allowCredentials = allowCredentials; }
     public String getAllowedOrigins() { 
-        LOG.finer("PluginImpl.getAllowedOrigins");
+        LOG.finer("CORSPlugin.getAllowedOrigins");
         return this.allowedOrigins;
     }
     public void setAllowedOrigins(final String allowedOrigins) {
-        LOG.entering("PluginImpl","setAllowedOrigins");
+        LOG.entering("CORSPlugin","setAllowedOrigins");
         this.allowedOrigins = allowedOrigins;
-        LOG.exiting("PluginImpl","setAllowedOrigins");
+        LOG.exiting("CORSPlugin","setAllowedOrigins");
     }
     public String getAllowedMethods() { return this.allowedMethods; }
     public void setAllowedMethods(final String allowedMethods) { this.allowedMethods = allowedMethods; }
@@ -119,7 +119,7 @@ public class PluginImpl
     @Override
     public void setServletContext(ServletContext context) {
         super.setServletContext(context);
-        LOG.entering("PluginImpl","setServletContext");
+        LOG.entering("CORSPlugin","setServletContext");
         this.context = context;
     }
 
@@ -127,7 +127,7 @@ public class PluginImpl
     @Override
     public void start() throws Exception {
         super.start();
-        LOG.entering("PluginImpl","start");
+        LOG.entering("CORSPlugin","start");
         try {
             load(); 
         } catch (java.io.IOException e) {
@@ -140,13 +140,13 @@ public class PluginImpl
         PluginServletFilter.addFilter(myFilter);
         this.filter = myFilter;
 
-        LOG.exiting("PluginImpl","start");
+        LOG.exiting("CORSPlugin","start");
     }
 
     @Override
     public void postInitialize() throws Exception {
         super.postInitialize();
-        LOG.entering("PluginImpl","postInitialize");
+        LOG.entering("CORSPlugin","postInitialize");
         // log config field values in the instance variables 
         LOG.config("start() called with following state: " +
                    CrossOriginFilter.ALLOWED_ORIGINS_PARAM   + "=" +  allowedOrigins   + ", " +
@@ -160,7 +160,7 @@ public class PluginImpl
         // generate a FilterConfigWrapper from this's state
         FilterConfigWrapper configWrapper = createFilterConfigWrapper();
         filter.init(configWrapper);
-        LOG.exiting("PluginImpl","postInitialize");
+        LOG.exiting("CORSPlugin","postInitialize");
     }
 
     private FilterConfigWrapper createFilterConfigWrapper() {
@@ -183,9 +183,9 @@ public class PluginImpl
     @Override
     public void stop() throws Exception {
         super.stop();
-        LOG.entering("PluginImpl","stop");
+        LOG.entering("CORSPlugin","stop");
         filter.destroy();
-        LOG.exiting("PluginImpl","stop");
+        LOG.exiting("CORSPlugin","stop");
     }
 
     @Override
@@ -195,7 +195,7 @@ public class PluginImpl
                javax.servlet.ServletException,
                hudson.model.Descriptor.FormException
     {
-        LOG.entering("PluginImpl","configure");
+        LOG.entering("CORSPlugin","configure");
         LOG.config("configure() called with form data: " + 
                    CrossOriginFilter.ALLOWED_ORIGINS_PARAM   + "=" + formData.getString(  CrossOriginFilter.ALLOWED_ORIGINS_PARAM) + ", " +
                    CrossOriginFilter.ALLOWED_METHODS_PARAM   + "=" + formData.getString(  CrossOriginFilter.ALLOWED_METHODS_PARAM) + ", " +
@@ -222,7 +222,7 @@ public class PluginImpl
         FilterConfigWrapper configWrapper = createFilterConfigWrapper();
         this.filter.init(configWrapper);
 
-        LOG.exiting("PluginImpl","configure");
+        LOG.exiting("CORSPlugin","configure");
         return ;
     }
 }
